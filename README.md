@@ -153,52 +153,63 @@ REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
 backend-app   latest    656362a53653   5 seconds ago   340MB                                                                                                                           0.0s
 ```
 
-* **Déploiement d'un registre privé et tag/push de l'image**
+* **Déploiement d'un registre privé + dasboard web (depuis un docker-compose-registry.yml) et tag/push de l'image**
 
 ```bash
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
-$ docker run -d -p 5000:5000 --name myregistry --restart=always registry:2
-Unable to find image 'registry:2' locally
-2: Pulling from library/registry
-44cf07d57ee4: Pull complete 
-bbbdd6c6894b: Pull complete 
-8e82f80af0de: Pull complete 
-3493bf46cdec: Pull complete 
-6d464ea18732: Pull complete 
-Digest: sha256:a3d8aaa63ed8681a604f1dea0aa03f100d5895b6a58ace528858a7b332415373
-Status: Downloaded newer image for registry:2
-e482e8a83c2ab224e35dd9be82fdd135c784b97147e51cace5b312a64f79eb7f
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
-$ docker run -d -p 5000:5000 --name myregistry --restart=always registry:2
-Unable to find image 'registry:2' locally
-2: Pulling from library/registry
-44cf07d57ee4: Pull complete 
-bbbdd6c6894b: Pull complete 
-8e82f80af0de: Pull complete 
-3493bf46cdec: Pull complete 
-6d464ea18732: Pull complete 
-Digest: sha256:a3d8aaa63ed8681a604f1dea0aa03f100d5895b6a58ace528858a7b332415373
-Status: Downloaded newer image for registry:2
-e482e8a83c2ab224e35dd9be82fdd135c784b97147e51cace5b312a64f79eb7f
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
+$ docker compose -f docker-compose-registry.yml up -d
+[+] Running 20/20
+ ✔ registry-ui 13 layers [⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                                               2.6s 
+   ✔ 1074353eec0d Pull complete                                                                                                               0.3s 
+   ✔ 25f453064fd3 Pull complete                                                                                                               0.3s 
+   ✔ 567f84da6fbd Pull complete                                                                                                               0.3s 
+   ✔ da7c973d8b92 Pull complete                                                                                                               0.5s 
+   ✔ 33f95a0f3229 Pull complete                                                                                                               0.5s 
+   ✔ 085c5e5aaa8e Pull complete                                                                                                               0.5s 
+   ✔ 0abf9e567266 Pull complete                                                                                                               0.8s 
+   ✔ 4f4fb700ef54 Pull complete                                                                                                               0.8s 
+   ✔ 86542d87c26f Pull complete                                                                                                               0.8s 
+   ✔ f00587c9d3c4 Pull complete                                                                                                               1.0s 
+   ✔ 4938dcb4f5b5 Pull complete                                                                                                               1.1s 
+   ✔ 7c58ebf04d2e Pull complete                                                                                                               1.1s 
+   ✔ eee8323a8c5c Pull complete                                                                                                               1.3s 
+ ✔ registry-private 5 layers [⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                                                   3.2s 
+   ✔ 44cf07d57ee4 Pull complete                                                                                                               1.4s 
+   ✔ bbbdd6c6894b Pull complete                                                                                                               1.4s 
+   ✔ 8e82f80af0de Pull complete                                                                                                               1.7s 
+   ✔ 3493bf46cdec Pull complete                                                                                                               1.8s 
+   ✔ 6d464ea18732 Pull complete                                                                                                               1.8s 
+[+] Building 0.0s (0/0)                                                                                                             docker:default
+[+] Running 4/4
+ ✔ Network mini-projet-docker-commun_default               Created                                                                            0.0s 
+ ✔ Volume "mini-projet-docker-commun_registry_data"        Created                                                                            0.0s 
+ ✔ Container mini-projet-docker-commun-registry-private-1  Started                                                                            0.1s 
+ ✔ Container mini-projet-docker-commun-registry-ui-1       Started                                                                            0.0s 
 
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
+$ docker images
+REPOSITORY                 TAG       IMAGE ID       CREATED         SIZE
+backend-app                latest    02069ee02e51   6 minutes ago   340MB
+joxit/docker-registry-ui   latest    fc0c719c7b3f   4 weeks ago     22.1MB
+registry                   2         26b2eb03618e   2 years ago     25.4MB
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
 $ docker tag backend-app:latest localhost:5000/backend-app:latest
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
 $ docker images
 REPOSITORY                   TAG       IMAGE ID       CREATED         SIZE
-backend-app                  latest    656362a53653   2 minutes ago   340MB
-localhost:5000/backend-app   latest    656362a53653   2 minutes ago   340MB
+backend-app                  latest    02069ee02e51   7 minutes ago   340MB
+localhost:5000/backend-app   latest    02069ee02e51   7 minutes ago   340MB
+joxit/docker-registry-ui     latest    fc0c719c7b3f   4 weeks ago     22.1MB
 registry                     2         26b2eb03618e   2 years ago     25.4MB
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
 $ docker push localhost:5000/backend-app:latest
 The push refers to repository [localhost:5000/backend-app]
-e348b5e5d2df: Pushed 
-ceeb463ebac0: Pushed 
-89769d86aa57: Pushed 
-7bb20cf5ef67: Pushed 
-latest: digest: sha256:4a059016dfcf5c84867e212b7825e396b55d5871ec6a832c6097802ef079e659 size: 1160
-
-[node2] (local) root@10.0.8.5 ~/bootcamp-project-update/mini-projet-docker
+85e6f29281a2: Pushed 
+1df879280d71: Pushed 
+3d146006478f: Pushed 
+989e799e6349: Pushed 
+latest: digest: sha256:5548b3a8983dfcb5f1633ea84c2890522fbfaaf71ebf520c721bdfab5a85467a size: 1160
+[node1] (local) root@10.0.1.4 ~/mini-projet-docker-commun
 $ curl -X GET http://localhost:5000/v2/_catalog
 {"repositories":["backend-app"]}
 ```
